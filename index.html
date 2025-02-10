@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #time {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+        }
+        #laps {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        #Box {
+            padding: 70px;
+            margin: 10px auto;
+            border: 30px solid seagreen; 
+            width: fit-content;
+            display: inline-block;
+            background-color: lightgray; 
+            border-radius: 10px; 
+        }
+
+    </style>
+</head>
+<body>
+  <div id="Box">
+    <h1>Stopwatch</h1>
+    <div id="time">00:00:00.000</div>
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="pauseStopwatch()">Pause</button>
+    <button onclick="resetStopwatch()">Reset</button>
+    <button onclick="recordLap()">Lap</button>
+  </div>
+    <ul id="laps"></ul>
+
+    <script>
+        let startTime = 0, elapsedTime = 0, timerInterval;
+        let isRunning = false;
+
+        function updateTime() {
+            const now = Date.now();
+            elapsedTime = now - startTime;
+            const date = new Date(elapsedTime);
+            document.getElementById("time").textContent =
+                `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}.${String(date.getUTCMilliseconds()).padStart(3, '0')}`;
+        }
+
+        function startStopwatch() {
+            if (!isRunning) {
+                startTime = Date.now() - elapsedTime;
+                timerInterval = setInterval(updateTime, 10);
+                isRunning = true;
+            }
+        }
+
+        function pauseStopwatch() {
+            clearInterval(timerInterval);
+            isRunning = false;
+        }
+
+        function resetStopwatch() {
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            document.getElementById("time").textContent = "00:00:00.000";
+            document.getElementById("laps").innerHTML = "";
+            isRunning = false;
+        }
+
+        function recordLap() {
+            if (isRunning) {
+                const lapTime = document.getElementById("time").textContent;
+                const lapItem = document.createElement("li");
+                lapItem.textContent = lapTime;
+                document.getElementById("laps").appendChild(lapItem);
+            }
+        }
+    </script>
+
+</body>
+</html>
